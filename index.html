@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>এইচএসসি প্রাইভেট প্রোগ্রাম - হোম</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="mobile-container">
+    <!-- হেডার এবং অ্যানিমেশন -->
+    <header class="header">
+      <h1 id="animated-heading" class="animated-heading"></h1>
+      <p class="search-instruction">যেকোনো বিষয়ের পিডিএফ খুঁজতে সার্চ বক্সে সার্চ করুন</p>
+    </header>
+
+    <!-- সার্চ বক্স এবং সাজেশন ড্রপডাউন -->
+    <div class="search-box">
+      <div class="input-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="subject-search" autocomplete="off" placeholder="বিষয় লিখুন (যেমন: ICT, English)...">
+      </div>
+      <ul id="suggestion-list" class="suggestion-list">
+        <li class="suggestion-item" onclick="location.href='ict.html'">
+          <i class="fa-solid fa-file-pdf"></i> আইসিটি (ICT)
+        </li>
+        <li class="suggestion-item" onclick="location.href='english.html'">
+          <i class="fa-solid fa-file-pdf"></i> ইংরেজি (English)
+        </li>
+        <li class="suggestion-item" onclick="location.href='economics.html'">
+          <i class="fa-solid fa-file-pdf"></i> ইকোনমিক্স (Economics)
+        </li>
+      </ul>
+    </div>
+
+    <!-- শিক্ষামূলক বাণী সেকশন -->
+    <div class="quotes-container">
+      <h3 class="section-subtitle"><i class="fa-solid fa-lightbulb"></i> শিক্ষামূলক বাণী</h3>
+      
+      <div class="quote-card">
+        <div class="quote-header"><i class="fa-solid fa-quote-left"></i><span>অনুপ্রেরণা ১</span></div>
+        <p class="quote-text">শিক্ষাই জাতির মেরুদণ্ড, আর সঠিক শিক্ষা আনে মুক্তি।</p>
+      </div>
+
+      <div class="quote-card">
+        <div class="quote-header"><i class="fa-solid fa-quote-left"></i><span>অনুপ্রেরণা ২</span></div>
+        <p class="quote-text">পরিশ্রম কখনো বৃথা যায় না, আজ নয়তো কাল তার ফল মিলবেই।</p>
+      </div>
+
+      <div class="quote-card">
+        <div class="quote-header"><i class="fa-solid fa-quote-left"></i><span>অনুপ্রেরণা ৩</span></div>
+        <p class="quote-text">জ্ঞানই সবচেয়ে বড় শক্তি, যা দিয়ে পৃথিবী জয় করা সম্ভব।</p>
+      </div>
+    </div>
+
+    <!-- এডমিন প্যানেল লিংক বাটন -->
+    <div class="admin-link-wrapper">
+      <a href="admin.html" class="admin-btn">
+        <i class="fa-solid fa-user-shield"></i> এডমিন প্যানেল
+      </a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

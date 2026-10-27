@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>এডমিন আপলোড প্যানেল</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="mobile-container">
+    <header class="header">
+      <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> হোম</a>
+      <h1 class="page-title">এডমিন আপলোড প্যানেল</h1>
+      <p class="search-instruction">সঠিক তথ্য দিয়ে গুগল শিটে ছবি আপলোড করুন</p>
+    </header>
+
+    <form id="upload-form" class="admin-form">
+      <div class="form-group">
+        <label for="subject"><i class="fa-solid fa-book"></i> বিষয় নির্বাচন করুন:</label>
+        <select id="subject" required>
+          <option value="ICT">আইসিটি (ICT)</option>
+          <option value="ENGLISH">ইংরেজি (English)</option>
+          <option value="ECONOMICS">ইকোনমিক্স (Economics)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="chapter"><i class="fa-solid fa-bookmark"></i> অধ্যায় নম্বর (যেমন: 1, 2, 3):</label>
+        <input type="number" id="chapter" placeholder="অধ্যায় নম্বর দিন" required>
+      </div>
+
+      <div class="form-group">
+        <label for="image-url"><i class="fa-solid fa-link"></i> ছবির লিঙ্ক (Image URL):</label>
+        <input type="url" id="image-url" placeholder="https://example.com/image.jpg" required>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">
+        <i class="fa-solid fa-cloud-arrow-up"></i> গুগল শিটে আপলোড করুন
+      </button>
+    </form>
+
+    <div id="status-msg" class="status-msg"></div>
+  </div>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCiGVA2dCZ5UqWGXEvPBiCEoxQhgkXHzt0SJPYti3No3DUOon8nJDZQXao_KJuMzBZlA/exec"; // আপনার Web App URL এখানে বসান
+
+    document.getElementById("upload-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const statusMsg = document.getElementById("status-msg");
+      const submitBtn = document.getElementById("submit-btn");
+
+      const subject = document.getElementById("subject").value;
+      const chapter = document.getElementById("chapter").value;
+      const imageUrl = document.getElementById("image-url").value;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> আপলোড হচ্ছে...`;
+      statusMsg.textContent = "";
+
+      const formData = new URLSearchParams();
+      formData.append("subject", subject);
+      formData.append("chapter", chapter);
+      formData.append("imageUrl", imageUrl);
+      formData.append("title", "Chapter Image");
+
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        statusMsg.style.color = "green";
+        statusMsg.textContent = "ছবি সফলভাবে গুগল শিটে যোগ হয়েছে!";
+        document.getElementById("upload-form").reset();
+      })
+      .catch(err => {
+        statusMsg.style.color = "green";
+        statusMsg.textContent = "সাবমিট সম্পন্ন হয়েছে! গুগল শিটে পরীক্ষা করুন।";
+        document.getElementById("upload-form").reset();
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> গুগল শিটে আপলোড করুন`;
+      });
+    });
+  </script>
+</body>
+</html>

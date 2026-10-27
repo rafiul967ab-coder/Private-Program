@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ইকোনমিক্স মেটেরিয়ালস - এইচএসসি প্রাইভেট প্রোগ্রাম</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="mobile-container">
+    <header class="header">
+      <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> হোম</a>
+      <h1 class="page-title">ইকোনমিক্স (Economics)</h1>
+      <p class="search-instruction">অধ্যায় নম্বর লিখে সার্চ করুন</p>
+    </header>
+
+    <div class="search-box">
+      <div class="input-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="chapter-search" placeholder="অধ্যায় নম্বর লিখুন (যেমন: 1, ১, 2, ২)...">
+      </div>
+    </div>
+
+    <div id="material-list" class="material-list">
+      <div class="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> ছবি লোড হচ্ছে...</div>
+    </div>
+  </div>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCiGVA2dCZ5UqWGXEvPBiCEoxQhgkXHzt0SJPYti3No3DUOon8nJDZQXao_KJuMzBZlA/exec"; // আপনার Google Apps Script URL দিন
+    const CURRENT_SUBJECT = "ECONOMICS";
+
+    function toEnglishDigits(str) {
+      const banglaToEng = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+      return String(str).replace(/[০-৯]/g, w => banglaToEng[w]);
+    }
+
+    async function loadMaterials(chapterQuery = "") {
+      const container = document.getElementById("material-list");
+      const isOnline = navigator.onLine;
+
+      try {
+        let data = [];
+        if (isOnline) {
+          const res = await fetch(GOOGLE_SCRIPT_URL);
+          data = await res.json();
+          localStorage.setItem(`cache_${CURRENT_SUBJECT}`, JSON.stringify(data));
+        } else {
+          data = JSON.parse(localStorage.getItem(`cache_${CURRENT_SUBJECT}`) || "[]");
+        }
+
+        const normalizedQuery = toEnglishDigits(chapterQuery.trim());
+
+        const filtered = data.filter(item => {
+          const isSameSubject = String(item.subject).toUpperCase() === CURRENT_SUBJECT;
+          const itemChapter = toEnglishDigits(String(item.chapter));
+          const matchesChapter = (normalizedQuery === "" || itemChapter === normalizedQuery);
+          return isSameSubject && matchesChapter;
+        });
+
+        container.innerHTML = "";
+
+        if (filtered.length === 0) {
+          container.innerHTML = `<p class="no-data">কোনো ছবি পাওয়া যায়নি!</p>`;
+          return;
+        }
+
+        filtered.forEach((item, index) => {
+          const card = document.createElement("div");
+          card.className = "material-card";
+          card.innerHTML = `
+            <div class="card-header">
+              <span>অধ্যায় ${item.chapter} - ছবি #${index + 1}</span>
+              ${isOnline ? `<a href="${item.imageUrl}" download="Economics_Ch${item.chapter}_${index+1}.jpg" target="_blank" class="download-btn"><i class="fa-solid fa-download"></i> ডাউনলোড</a>` : `<span class="offline-tag">অফলাইন মোড</span>`}
+            </div>
+            <img src="${item.imageUrl}" alt="Economics Chapter ${item.chapter}">
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        container.innerHTML = `<p class="no-data">ডেটা লোড করতে সমস্যা হয়েছে!</p>`;
+      }
+    }
+
+    document.getElementById("chapter-search").addEventListener("input", function() {
+      loadMaterials(this.value);
+    });
+
+    loadMaterials();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>
